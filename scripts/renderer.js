@@ -10,6 +10,7 @@ class Renderer {
     this.num_curve_sections = num_curve_sections;
     this.show_points = show_points_flag;
 
+    this.line_color = [0, 0, 0, 255];
     this.vertex_color = [255, 0, 0, 255];
   }
 
@@ -55,8 +56,8 @@ class Renderer {
     //   - variable `this.num_curve_sections` should be used for `num_edges`
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
-    this.drawBezierCurve({ x: 1, y: 598 }, { x: 1, y: 1 }, { x: 798, y: 1 }, { x: 798, y: 598 }, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
-    this.drawBezierCurve({ x: 51, y: 598 }, { x: 51, y: 51 }, { x: 748, y: 51 }, { x: 748, y: 598 }, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
+    this.drawBezierCurve({ x: 1, y: 598 }, { x: 1, y: 1 }, { x: 798, y: 1 }, { x: 798, y: 598 }, this.num_curve_sections, this.line_color, framebuffer);
+    this.drawBezierCurve({ x: 51, y: 598 }, { x: 51, y: 51 }, { x: 748, y: 51 }, { x: 748, y: 598 }, this.num_curve_sections, this.line_color, framebuffer);
   }
 
   // framebuffer:  canvas ctx image data
