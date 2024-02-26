@@ -96,6 +96,7 @@ class Renderer {
   // framebuffer:  canvas ctx image data
   drawBezierCurve(p0, p1, p2, p3, num_edges, color, framebuffer) {
     // Draws a sequence of straight lines to approximate a Bezier curve
+    const vertices = [];
     // Calculate values that remain constant for all coordinates
     const t_delta = 1 / num_edges;
     const t_limit = 1 + t_delta / 2; // prevents endpoint not being rendered due to floating point error buildup
@@ -104,7 +105,7 @@ class Renderer {
     // Initialize with point 0
     let x0 = p0.x;
     let y0 = p0.y;
-    this.drawVertex({ x: x0, y: y0 }, this.vertex_color, framebuffer);
+    vertices.push({ x: x0, y: y0 });
     let x1, y1;
     for (let t = t_delta; t < t_limit; t += t_delta) {
       // Calculate values that remain constant for this `t`
@@ -119,6 +120,13 @@ class Renderer {
       this.drawLine({ x: x0, y: y0 }, { x: x1, y: y1 }, color, framebuffer);
       x0 = x1;
       y0 = y1;
+      vertices.push({ x: x0, y: y0 });
+    }
+    // Render vertices
+    if (this.show_points) {
+      for (const point of vertices) {
+        this.drawVertex({ x: point.x, y: point.y }, this.vertex_color, framebuffer);
+      }
     }
   }
 
