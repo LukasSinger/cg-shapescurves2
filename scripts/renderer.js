@@ -11,6 +11,7 @@ class Renderer {
     this.show_points = show_points_flag;
 
     this.line_color = [0, 0, 0, 255];
+    this.fill_color = [0, 200, 100, 255];
     this.vertex_color = [255, 0, 0, 255];
   }
 
@@ -75,15 +76,39 @@ class Renderer {
 
   // framebuffer:  canvas ctx image data
   drawSlide2(framebuffer) {
-    // TODO: draw at least 2 convex polygons (each with a different number of vertices >= 5)
+    // Draws 4 convex polygons (two with 5 vertices, two with 6)
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
-    // Following lines are example of drawing a single triangle
-    // (this should be removed after you implement the polygon)
-    let point_a = { x: 80, y: 40 };
-    let point_b = { x: 320, y: 160 };
-    let point_c = { x: 240, y: 360 };
-    this.drawTriangle(point_a, point_c, point_b, [0, 128, 128, 255], framebuffer);
+    const shape1 = [];
+    shape1.push({ x: 399, y: 329 });
+    shape1.push({ x: 499, y: 379 });
+    shape1.push({ x: 549, y: 379 });
+    shape1.push({ x: 549, y: 329 });
+    shape1.push({ x: 499, y: 229 });
+    this.drawConvexPolygon(shape1, this.fill_color, framebuffer);
+    const shape2 = [];
+    shape2.push({ x: 399, y: 269 });
+    shape2.push({ x: 299, y: 219 });
+    shape2.push({ x: 249, y: 219 });
+    shape2.push({ x: 249, y: 269 });
+    shape2.push({ x: 299, y: 369 });
+    this.drawConvexPolygon(shape2, this.fill_color, framebuffer);
+    const shape3 = [];
+    shape3.push({ x: 299, y: 479 });
+    shape3.push({ x: 399, y: 519 });
+    shape3.push({ x: 449, y: 519 });
+    shape3.push({ x: 449, y: 479 });
+    shape3.push({ x: 399, y: 379 });
+    shape3.push({ x: 349, y: 379 });
+    this.drawConvexPolygon(shape3, this.fill_color, framebuffer);
+    const shape4 = [];
+    shape4.push({ x: 499, y: 119 });
+    shape4.push({ x: 399, y: 79 });
+    shape4.push({ x: 349, y: 79 });
+    shape4.push({ x: 349, y: 119 });
+    shape4.push({ x: 399, y: 219 });
+    shape4.push({ x: 449, y: 219 });
+    this.drawConvexPolygon(shape4, this.fill_color, framebuffer);
   }
 
   // framebuffer:  canvas ctx image data
@@ -178,7 +203,18 @@ class Renderer {
   // color:        array of int [R, G, B, A]
   // framebuffer:  canvas ctx image data
   drawConvexPolygon(vertex_list, color, framebuffer) {
-    // TODO: draw a sequence of triangles to form a convex polygon
+    // Draws a sequence of triangles to form a convex polygon
+    for (let v = 2; v < vertex_list.length; v++) {
+      const p1 = vertex_list[v - 1];
+      const p2 = vertex_list[v];
+      this.drawTriangle(vertex_list[0], { x: p1.x, y: p1.y }, { x: p2.x, y: p2.y }, color, framebuffer);
+    }
+    // Render vertices
+    if (this.show_points) {
+      for (const point of vertex_list) {
+        this.drawVertex({ x: point.x, y: point.y }, this.vertex_color, framebuffer);
+      }
+    }
   }
 
   // v:            object {x: __, y: __}
