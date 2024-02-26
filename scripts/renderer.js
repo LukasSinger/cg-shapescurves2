@@ -62,9 +62,15 @@ class Renderer {
 
   // framebuffer:  canvas ctx image data
   drawSlide1(framebuffer) {
-    // TODO: draw at least 2 circles
+    // Draws 5 circles
     //   - variable `this.num_curve_sections` should be used for `num_edges`
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
+
+    this.drawCircle({ x: 399, y: 299 }, 25, this.num_curve_sections, this.line_color, framebuffer);
+    this.drawCircle({ x: 399, y: 299 }, 75, this.num_curve_sections, this.line_color, framebuffer);
+    this.drawCircle({ x: 399, y: 299 }, 125, this.num_curve_sections, this.line_color, framebuffer);
+    this.drawCircle({ x: 399, y: 299 }, 175, this.num_curve_sections, this.line_color, framebuffer);
+    this.drawCircle({ x: 399, y: 299 }, 225, this.num_curve_sections, this.line_color, framebuffer);
   }
 
   // framebuffer:  canvas ctx image data
@@ -140,7 +146,32 @@ class Renderer {
   // color:        array of int [R, G, B, A]
   // framebuffer:  canvas ctx image data
   drawCircle(center, radius, num_edges, color, framebuffer) {
-    // TODO: draw a sequence of straight lines to approximate a circle
+    // Draws a sequence of straight lines to approximate a circle
+    const vertices = [];
+    // Calculate values that remain constant for all coordinates
+    const rev = 2 * Math.PI;
+    const p_delta = rev / num_edges;
+    const p_limit = rev + p_delta / 2; // prevents endpoint not being rendered due to floating point error buildup
+    // Initialize at p = 0
+    let x0 = center.x + radius;
+    let y0 = center.y;
+    vertices.push({ x: x0, y: y0 });
+    let x1, y1;
+    for (let p = p_delta; p < p_limit; p += p_delta) {
+      // Calculate the x and y coordinates
+      x1 = center.x + Math.round(radius * Math.cos(p));
+      y1 = center.y + Math.round(radius * Math.sin(p));
+      this.drawLine({ x: x0, y: y0 }, { x: x1, y: y1 }, color, framebuffer);
+      x0 = x1;
+      y0 = y1;
+      vertices.push({ x: x0, y: y0 });
+    }
+    // Render vertices
+    if (this.show_points) {
+      for (const point of vertices) {
+        this.drawVertex({ x: point.x, y: point.y }, this.vertex_color, framebuffer);
+      }
+    }
   }
 
   // vertex_list:  array of object [{x: __, y: __}, {x: __, y: __}, ..., {x: __, y: __}]
