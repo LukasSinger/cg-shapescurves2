@@ -13,6 +13,7 @@ class Renderer {
     this.line_color = [0, 0, 0, 255];
     this.fill_color = [0, 200, 100, 255];
     this.vertex_color = [255, 0, 0, 255];
+    this.control_point_color = [0, 0, 255, 255];
   }
 
   // n:  int
@@ -158,6 +159,8 @@ class Renderer {
       for (const point of vertices) {
         this.drawVertex({ x: point.x, y: point.y }, this.vertex_color, framebuffer);
       }
+      this.drawVertex(p1, this.control_point_color, framebuffer);
+      this.drawVertex(p2, this.control_point_color, framebuffer);
     }
   }
 
