@@ -12,6 +12,8 @@ class Renderer {
 
     this.line_color = [0, 0, 0, 255];
     this.fill_color = [0, 200, 100, 255];
+    this.name_color = [0, 200, 100, 255];
+
     this.vertex_color = [255, 0, 0, 255];
     this.control_point_color = [0, 0, 255, 255];
   }
@@ -114,9 +116,50 @@ class Renderer {
 
   // framebuffer:  canvas ctx image data
   drawSlide3(framebuffer) {
-    // TODO: draw your name!
+    // Draws my name!
     //   - variable `this.num_curve_sections` should be used for `num_edges`
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
+
+    // L
+    this.drawLine({ x: 50, y: 500 }, { x: 50, y: 300 }, this.name_color, framebuffer);
+    this.drawLine({ x: 50, y: 300 }, { x: 150, y: 300 }, this.name_color, framebuffer);
+    // U
+    this.drawCircle({ x: 250, y: 350 }, 50, this.num_curve_sections, this.name_color, framebuffer);
+    this.drawConvexPolygon(
+      [
+        { x: 200, y: 413 },
+        { x: 300, y: 413 },
+        { x: 300, y: 350 },
+        { x: 200, y: 350 }
+      ],
+      [255, 255, 255, 255],
+      framebuffer
+    );
+    this.drawLine({ x: 200, y: 500 }, { x: 200, y: 350 }, this.name_color, framebuffer);
+    this.drawLine({ x: 300, y: 500 }, { x: 300, y: 350 }, this.name_color, framebuffer);
+    // K
+    this.drawLine({ x: 350, y: 500 }, { x: 350, y: 300 }, this.name_color, framebuffer);
+    this.drawLine({ x: 450, y: 500 }, { x: 350, y: 400 }, this.name_color, framebuffer);
+    this.drawLine({ x: 350, y: 400 }, { x: 450, y: 300 }, this.name_color, framebuffer);
+    // A
+    this.drawCircle({ x: 550, y: 450 }, 50, this.num_curve_sections, this.name_color, framebuffer);
+    this.drawConvexPolygon(
+      [
+        { x: 500, y: 450 },
+        { x: 600, y: 450 },
+        { x: 600, y: 400 },
+        { x: 500, y: 400 }
+      ],
+      [255, 255, 255, 255],
+      framebuffer
+    );
+    this.drawLine({ x: 600, y: 450 }, { x: 600, y: 300 }, this.name_color, framebuffer);
+    this.drawCircle({ x: 550, y: 350 }, 50, this.num_curve_sections, this.name_color, framebuffer);
+    // S
+    this.drawLine({ x: 750, y: 500 }, { x: 700, y: 500 }, this.name_color, framebuffer);
+    this.drawBezierCurve({ x: 700, y: 500 }, { x: 625, y: 500 }, { x: 625, y: 400 }, { x: 700, y: 400 }, this.num_curve_sections, this.name_color, framebuffer);
+    this.drawBezierCurve({ x: 700, y: 400 }, { x: 775, y: 400 }, { x: 775, y: 300 }, { x: 700, y: 300 }, this.num_curve_sections, this.name_color, framebuffer);
+    this.drawLine({ x: 700, y: 300 }, { x: 650, y: 300 }, this.name_color, framebuffer);
   }
 
   // p0:           object {x: __, y: __}
