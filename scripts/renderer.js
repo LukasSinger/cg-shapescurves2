@@ -221,7 +221,9 @@ class Renderer {
   // color:        array of int [R, G, B, A]
   // framebuffer:  canvas ctx image data
   drawVertex(v, color, framebuffer) {
-    // TODO: draw some symbol (e.g. small rectangle, two lines forming an X, ...) centered at position `v`
+    // Draws two lines forming an "X" centered at position `v`
+    this.drawLine({ x: v.x - 5, y: v.y + 5 }, { x: v.x + 5, y: v.y - 5 }, color, framebuffer);
+    this.drawLine({ x: v.x + 5, y: v.y + 5 }, { x: v.x - 5, y: v.y - 5 }, color, framebuffer);
   }
 
   /***************************************************************
