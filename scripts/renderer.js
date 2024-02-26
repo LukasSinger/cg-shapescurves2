@@ -9,6 +9,8 @@ class Renderer {
     this.slide_idx = 0;
     this.num_curve_sections = num_curve_sections;
     this.show_points = show_points_flag;
+
+    this.vertex_color = [255, 0, 0, 255];
   }
 
   // n:  int
@@ -49,13 +51,12 @@ class Renderer {
 
   // framebuffer:  canvas ctx image data
   drawSlide0(framebuffer) {
-    // TODO: draw at least 2 Bezier curves
+    // Draws 2 Bezier curves
     //   - variable `this.num_curve_sections` should be used for `num_edges`
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
-    // Following line is example of drawing a single line
-    // (this should be removed after you implement the curve)
-    this.drawLine({ x: 100, y: 100 }, { x: 600, y: 300 }, [255, 0, 0, 255], framebuffer);
+    this.drawBezierCurve({ x: 1, y: 598 }, { x: 1, y: 1 }, { x: 798, y: 1 }, { x: 798, y: 598 }, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
+    this.drawBezierCurve({ x: 51, y: 598 }, { x: 51, y: 51 }, { x: 748, y: 51 }, { x: 748, y: 598 }, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
   }
 
   // framebuffer:  canvas ctx image data
@@ -93,7 +94,35 @@ class Renderer {
   // color:        array of int [R, G, B, A]
   // framebuffer:  canvas ctx image data
   drawBezierCurve(p0, p1, p2, p3, num_edges, color, framebuffer) {
-    // TODO: draw a sequence of straight lines to approximate a Bezier curve
+    // Draws a sequence of straight lines to approximate a Bezier curve
+    // Calculate values that remain constant for all coordinates
+    const t_delta = 1 / num_edges;
+    const t_limit = 1 + t_delta / 2; // prevents endpoint not being rendered due to floating point error buildup
+    const coord_term1_const = { x: 3 * p1.x, y: 3 * p1.y };
+    const coord_term2_const = { x: 3 * p2.x, y: 3 * p2.y };
+    // Initialize with point 0
+    let x0 = p0.x;
+    let y0 = p0.y;
+    this.drawVertex({ x: x0, y: y0 }, this.vertex_color, framebuffer);
+    let x1, y1;
+    for (let t = t_delta; t < t_limit; t += t_delta) {
+      // Calculate values that remain constant for this `t`
+      const t_inv = 1 - t;
+      const coord_term0_t_const = t_inv ** 3;
+      const coord_term1_t_const = t_inv ** 2 * t;
+      const coord_term2_t_const = t_inv * t ** 2;
+      const coord_term3_t_const = t ** 3;
+      // Calculate the x and y coordinates
+      x1 = this.bezierCurveCoord(coord_term0_t_const, p0, coord_term1_t_const, coord_term1_const, coord_term2_t_const, coord_term2_const, coord_term3_t_const, p3, "x");
+      y1 = this.bezierCurveCoord(coord_term0_t_const, p0, coord_term1_t_const, coord_term1_const, coord_term2_t_const, coord_term2_const, coord_term3_t_const, p3, "y");
+      this.drawLine({ x: x0, y: y0 }, { x: x1, y: y1 }, color, framebuffer);
+      x0 = x1;
+      y0 = y1;
+    }
+  }
+
+  bezierCurveCoord(coord_term0_t_const, p0, coord_term1_t_const, coord_term1_const, coord_term2_t_const, coord_term2_const, coord_term3_t_const, p3, coord) {
+    return Math.round(coord_term0_t_const * p0[coord] + coord_term1_t_const * coord_term1_const[coord] + coord_term2_t_const * coord_term2_const[coord] + coord_term3_t_const * p3[coord]);
   }
 
   // center:       object {x: __, y: __}
