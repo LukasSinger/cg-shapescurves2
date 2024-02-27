@@ -121,8 +121,8 @@ class Renderer {
     //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
     // L
-    this.drawLine({ x: 50, y: 500 }, { x: 50, y: 300 }, this.name_color, framebuffer);
-    this.drawLine({ x: 50, y: 300 }, { x: 150, y: 300 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 50, y: 500 }, { x: 50, y: 300 }, this.name_color, framebuffer, true);
+    this.drawLineWithVertices({ x: 50, y: 300 }, { x: 150, y: 300 }, this.name_color, framebuffer);
     // U
     this.drawCircle({ x: 250, y: 350 }, 50, this.num_curve_sections, this.name_color, framebuffer);
     this.drawConvexPolygon(
@@ -135,12 +135,12 @@ class Renderer {
       [255, 255, 255, 255],
       framebuffer
     );
-    this.drawLine({ x: 200, y: 500 }, { x: 200, y: 350 }, this.name_color, framebuffer);
-    this.drawLine({ x: 300, y: 500 }, { x: 300, y: 350 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 200, y: 500 }, { x: 200, y: 350 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 300, y: 500 }, { x: 300, y: 350 }, this.name_color, framebuffer);
     // K
-    this.drawLine({ x: 350, y: 500 }, { x: 350, y: 300 }, this.name_color, framebuffer);
-    this.drawLine({ x: 450, y: 500 }, { x: 350, y: 400 }, this.name_color, framebuffer);
-    this.drawLine({ x: 350, y: 400 }, { x: 450, y: 300 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 350, y: 500 }, { x: 350, y: 300 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 450, y: 500 }, { x: 350, y: 400 }, this.name_color, framebuffer, true);
+    this.drawLineWithVertices({ x: 350, y: 400 }, { x: 450, y: 300 }, this.name_color, framebuffer);
     // A
     this.drawCircle({ x: 550, y: 450 }, 50, this.num_curve_sections, this.name_color, framebuffer);
     this.drawConvexPolygon(
@@ -153,13 +153,21 @@ class Renderer {
       [255, 255, 255, 255],
       framebuffer
     );
-    this.drawLine({ x: 600, y: 450 }, { x: 600, y: 300 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 600, y: 450 }, { x: 600, y: 300 }, this.name_color, framebuffer);
     this.drawCircle({ x: 550, y: 350 }, 50, this.num_curve_sections, this.name_color, framebuffer);
     // S
-    this.drawLine({ x: 750, y: 500 }, { x: 700, y: 500 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 750, y: 500 }, { x: 700, y: 500 }, this.name_color, framebuffer, true);
     this.drawBezierCurve({ x: 700, y: 500 }, { x: 625, y: 500 }, { x: 625, y: 400 }, { x: 700, y: 400 }, this.num_curve_sections, this.name_color, framebuffer);
     this.drawBezierCurve({ x: 700, y: 400 }, { x: 775, y: 400 }, { x: 775, y: 300 }, { x: 700, y: 300 }, this.num_curve_sections, this.name_color, framebuffer);
-    this.drawLine({ x: 700, y: 300 }, { x: 650, y: 300 }, this.name_color, framebuffer);
+    this.drawLineWithVertices({ x: 700, y: 300 }, { x: 650, y: 300 }, this.name_color, framebuffer);
+  }
+
+  drawLineWithVertices(p0, p1, color, framebuffer, skipEndVertex) {
+    this.drawLine(p0, p1, color, framebuffer);
+    if (this.show_points) {
+      this.drawVertex(p0, this.vertex_color, framebuffer);
+      if (!skipEndVertex) this.drawVertex(p1, this.vertex_color, framebuffer);
+    }
   }
 
   // p0:           object {x: __, y: __}
